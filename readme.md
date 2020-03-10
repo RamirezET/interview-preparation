@@ -78,21 +78,25 @@ function isPlainObject(obj) {
 
 ```Javascript
 function isEqual(target1, target2) {
+  // 直接先对比，相等就返回
   if (target1 === target2) return true;
 
   const isPlainObject = obj => Object.prototype.toString.call(obj) === "[object Object]";
-
+  //  如果两者任意一个不是纯对象，直接返回对比结果
   if (!isPlainObject(target1) || !isPlainObject(target2)) return target1 === target2;
   
+  // 拿到俩个这的keys的数组，长度不一致那肯定不一样
   const target1Keys = Object.keys(target1);
   const target2Keys = Object.keys(target2);
   if (target1Keys.length !== target2Keys.length) return false;
 
+  // 以target1为基准遍历，递归调用isEqual对比每一项，任何一项不一样直接返回false
   for (const key in target1) {
     if (target1.hasOwnProperty(key)) {
       if (!isEqual(target1[key], target2[key])) return false;
     }
   }
+  // 全一样
   return true;
 }
 ```
