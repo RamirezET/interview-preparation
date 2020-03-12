@@ -114,6 +114,6 @@ function flatArray(arr) {
   // 用数组concat方法拍平数组第一层
   const result = [].concat(...arr);
   // 递归调用，拍平深层数组
-  return _flat(result);
+  return flatArray(result);
 }
 ```
