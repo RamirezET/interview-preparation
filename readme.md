@@ -104,16 +104,22 @@ function isEqual(target1, target2) {
 ## 拍平数组 flatArray
 
 ```Javascript
-function flatArray(arr) {
+function flatArray(arr, depth = Infinity) {
   // 不是数组则报错
   if (!arr instanceof Array) throw new TypeError("Expect Array");
-  // 看数组内元素是否都是普通类型
-  const isDeep = arr.some(item => Array.isArray(item));
-  // 如果都是普通类型则直接返回
-  if (!isDeep) return arr;
-  // 用数组concat方法拍平数组第一层
-  const result = [].concat(...arr);
-  // 递归调用，拍平深层数组
-  return flatArray(result);
+  // 判断是否支持ES10的flat方法
+  if (Array.prototype.flat) {
+    // 支持则直接调用
+    return arr.flat(depth);
+  } else {
+    // 看数组内元素是否都是普通类型
+    const isDeep = arr.some(item => Array.isArray(item));
+    // 如果都是普通类型则直接返回
+    if (!isDeep) return arr;
+    // 用数组concat方法拍平数组第一层
+    const result = [].concat(...arr);
+    // 递归调用，拍平深层数组
+    return flatArray(result);
+  }
 }
 ```
