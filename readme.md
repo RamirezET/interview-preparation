@@ -6,7 +6,7 @@
 function deepClone(target, hash = new WeakMap()) {
   if (typeof target !== "object" || target == null) return target;
   if (hash.has(target)) return hash.get(target);
-  
+
   const result = target instanceof Array ? [] : {};
   hash.set(target, result);
   for (const key in target) {
@@ -84,7 +84,7 @@ function isEqual(target1, target2) {
   const isPlainObject = obj => Object.prototype.toString.call(obj) === "[object Object]";
   //  如果两者任意一个不是纯对象，直接返回对比结果
   if (!isPlainObject(target1) || !isPlainObject(target2)) return target1 === target2;
-  
+
   // 拿到俩个这的keys的数组，长度不一致那肯定不一样
   const target1Keys = Object.keys(target1);
   const target2Keys = Object.keys(target2);
@@ -98,5 +98,22 @@ function isEqual(target1, target2) {
   }
   // 全一样
   return true;
+}
+```
+
+## 拍平数组 flatArray
+
+```Javascript
+function flatArray(arr) {
+  // 不是数组则报错
+  if (!arr instanceof Array) throw new TypeError("Expect Array");
+  // 看数组内元素是否都是普通类型
+  const isDeep = arr.some(item => Array.isArray(item));
+  // 如果都是普通类型则直接返回
+  if (!isDeep) return arr;
+  // 用数组concat方法拍平数组第一层
+  const result = [].concat(...arr);
+  // 递归调用，拍平深层数组
+  return _flat(result);
 }
 ```
