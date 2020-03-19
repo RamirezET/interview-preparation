@@ -123,3 +123,21 @@ function flatArray(arr, depth = Infinity) {
   }
 }
 ```
+
+## 数组快排 quickSort
+
+```Javascript
+  function quickSort(target) {
+    if (Object.prototype.toString.apply(target) !== '[object Array]' || target.length < 2) return target
+    const _arr = [...target]
+    const pivotItem = _arr.splice(Math.floor(_arr.length / 2), 1)
+    const smallerArr = []
+    const biggerArr = []
+    for (let index = 0; index < _arr.length; index++) {
+      const element = _arr[index]
+      pivotItem > element ? smallerArr.push(element) : biggerArr.push(element)
+    }
+    const result = this._quickSort(smallerArr).concat(pivotItem, this._quickSort(biggerArr))
+    return result
+  },
+```
