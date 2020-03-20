@@ -4,16 +4,23 @@
 
 ```Javascript
 function deepClone(target, hash = new WeakMap()) {
+  // 不是对象或者是null 直接返回
   if (typeof target !== "object" || target == null) return target;
+  // 通过WeakMap判断是否已有 有则返回对象引用
   if (hash.has(target)) return hash.get(target);
-
+  // 判断是数组还是字符串
   const result = target instanceof Array ? [] : {};
+  // 结果放进WeakMap里，key是target，值是result
   hash.set(target, result);
+  // for in遍历
   for (const key in target) {
-    if (target.hasOwnProperty(key)) {
+    // 避开原型链上的属性
+    if (Object.prototype.hasOwnProperty.apply(target,key)) {
+      // 递归调用
       result[key] = _deepClone(target[key]);
     }
   }
+  // 返回结果
   return result;
 }
 ```
@@ -22,23 +29,29 @@ function deepClone(target, hash = new WeakMap()) {
 
 ```Javascript
 function debounce(handler, wait = 300, immediate = false) {
+  // 声明一个变量timer
   let timer;
+  // 判断参数是否符合预期
   if (typeof handler !== "function") throw new Error("The first params shoule be a Function");
   if (typeof wait !== "number") throw new Error("The second params shoule be a Number");
 
   return function() {
+    // 缓存上下文和参数
     const context = this,
       args = [...arguments];
-
+    // 如果timer存在就清除timer
     timer && clearTimeout(timer);
 
     if (immediate) {
+      // immediate为true且定时器不存在，则设置定时器,并在指定时间后timer设置为null
       const callNow = !timer;
       timer = setTimeout(() => {
         timer = null;
       }, wait);
+      // 且立即执行一次handler,通过apply绑定上下文和传入参数
       callNow && handler.apply(context, args);
     } else {
+      // immediate为false则设置定时器
       timer = setTimeout(() => {
         handler.apply(context, args);
       }, wait);
@@ -51,15 +64,19 @@ function debounce(handler, wait = 300, immediate = false) {
 
 ```Javascript
 function throttle(handler, wait = 300) {
+  // 声明一个变量timer
   let timer;
   return function() {
+    // timer存在则直接返回怎么也不干
     if (timer) return;
-
+    // 缓存上下文和参数
     const context = this,
       args = [...arguments];
-
+    // 设置定时器
     timer = setTimeout(() => {
+      // 执行handler,通过apply绑定上下文和传入参数
       handler.apply(context, args);
+      // timer设置为null
       timer = null;
     }, wait);
   };
@@ -85,7 +102,7 @@ function isEqual(target1, target2) {
   //  如果两者任意一个不是纯对象，直接返回对比结果
   if (!isPlainObject(target1) || !isPlainObject(target2)) return target1 === target2;
 
-  // 拿到俩个这的keys的数组，长度不一致那肯定不一样
+  // 拿到两个keys的数组，长度不一致那肯定不一样
   const target1Keys = Object.keys(target1);
   const target2Keys = Object.keys(target2);
   if (target1Keys.length !== target2Keys.length) return false;
