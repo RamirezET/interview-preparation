@@ -128,16 +128,23 @@ function flatArray(arr, depth = Infinity) {
 
 ```Javascript
   function quickSort(target) {
+    // 不是数组或者数组长度小于2，则直接返回
     if (Object.prototype.toString.apply(target) !== '[object Array]' || target.length < 2) return target
+    // 拷贝一份数组
     const _arr = [...target]
+    // 找到并取出基准元素
     const pivotItem = _arr.splice(Math.floor(_arr.length / 2), 1)
+    // 定义两个临时数组，分别储存比基准小和比基准大的元素
     const smallerArr = []
     const biggerArr = []
+    // 遍历数组，将元素分类
     for (let index = 0; index < _arr.length; index++) {
       const element = _arr[index]
       pivotItem > element ? smallerArr.push(element) : biggerArr.push(element)
     }
+    // 将两个临时数组递归调用，并将两个数组和基准元素合并起来
     const result = this._quickSort(smallerArr).concat(pivotItem, this._quickSort(biggerArr))
+    // 返回新数组
     return result
   },
 ```
@@ -146,15 +153,20 @@ function flatArray(arr, depth = Infinity) {
 
 ```Javascript
   function bubbleSort(target) {
+    // 不是数组或者数组长度小于2，则直接返回
     if (Object.prototype.toString.apply(target) !== '[object Array]' || target.length < 2) return target
+    // 拷贝一份数组
     const _arr = [...target]
+    // 遍历数组
     for (let index = 0; index < _arr.length; index++) {
       for (let innerIdx = index + 1; innerIdx < _arr.length; innerIdx++) {
+        // 相邻元素两两对比，元素交换，大的元素交换到后面
         if (_arr[index] > _arr[innerIdx]) {
           [_arr[index], _arr[innerIdx]] = [_arr[innerIdx], _arr[index]]
         }
       }
     }
+    // 返回新数组
     return _arr
   }
 ```
