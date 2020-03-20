@@ -141,3 +141,20 @@ function flatArray(arr, depth = Infinity) {
     return result
   },
 ```
+
+## 数组冒泡排序 bubbleSort
+
+```Javascript
+  function bubbleSort(target) {
+    if (Object.prototype.toString.apply(target) !== '[object Array]' || target.length < 2) return target
+    const _arr = [...target]
+    for (let index = 0; index < _arr.length; index++) {
+      for (let innerIdx = index + 1; innerIdx < _arr.length; innerIdx++) {
+        if (_arr[index] > _arr[innerIdx]) {
+          [_arr[index], _arr[innerIdx]] = [_arr[innerIdx], _arr[index]]
+        }
+      }
+    }
+    return _arr
+  }
+```
