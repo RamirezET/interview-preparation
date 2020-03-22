@@ -187,3 +187,62 @@ function flatArray(arr, depth = Infinity) {
     return _arr
   }
 ```
+
+## 获取指定长度随机字符 getRandomStr
+
+```Javascript
+    function getRandomStr(len = 10) {
+      const _strLib = "abcdefghijklmnopqrstuvwxyz0123456789";
+      const _strLibLen = _strLib.length;
+      let res = "";
+      for (let index = 0; index < len; index++) {
+        res += _strLib[Math.floor(Math.random() * _strLibLen)];
+      }
+      return res;
+    }
+```
+
+## 手写 bind \_bind
+
+```Javascript
+    Function.prototype._bind = function(context, ...args) {
+      // bind函数第一个参数是要绑定的context，后面的参数则为要传递给函数的参数
+      // 返回一个新函数，新函数调用时依然可以传参，所以将两组参数合并
+      return (...extraArgs) => this.apply(context, args.concat(extraArgs));
+    };
+```
+
+## 手写 call \_call
+
+```Javascript
+    Function.prototype._call = function(context, ...args) {
+      // 获取随机字符用作临时名
+      const tempFnName = getRandomStr();
+      // fn._call() this就是fn，将this赋值给context下一个key名
+      context.fnTempName = this;
+      // 通过context.fnTempName调用fn，隐式绑定，传入参数，并且拿到返回结果
+      const result = context.fnTempName(...args);
+      // 过河拆桥，用完了把他一删
+      delete context.fnTempName;
+      // 返回调用结果
+      return result;
+    };
+```
+
+## 手写 apply \_apply
+
+```Javascript
+    Function.prototype._apply = function(context, args) {
+      // 获取随机字符用作临时名
+      const tempFnName = getRandomStr();
+      // fn._call() this就是fn，将this赋值给context下一个key名
+      context.fnTempName = this;
+      // 通过context.fnTempName调用fn，隐式绑定，传入参数，并且拿到返回结果
+      // 这里与call不一样的就是参数的传递，apply支持的是第二个参数为数组
+      const result = context.fnTempName(...args);
+      // 过河拆桥，用完了把他一删
+      delete context.fnTempName;
+      // 返回调用结果
+      return result;
+    };
+```
