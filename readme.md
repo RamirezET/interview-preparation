@@ -246,3 +246,44 @@ function flatArray(arr, depth = Infinity) {
       return result;
     };
 ```
+
+## 手写 promise \_promise
+
+> [最简实现Promise，支持异步链式调用（20行）](https://juejin.im/post/5e6f4579f265da576429a907)
+
+```Javascript
+function _Promise(exec) {
+  this.onResolvedCbs = [];
+  exec(value => {
+    setTimeout(() => {
+      this.data = value;
+      this.onResolvedCbs.forEach(cb => cb(value));
+    });
+  });
+}
+
+_Promise.prototype.then = function(onResolved) {
+  return new _Promise(resolve => {
+    console.log(resolve);
+    this.onResolvedCbs.push(() => {
+      const result = onResolved(this.data);
+      result instanceof _Promise ? result.then(resolve) : resolve(result);
+    });
+  });
+};
+
+new _Promise(resolve => {
+  setTimeout(() => {
+    resolve(1);
+  }, 500);
+})
+  .then(res => {
+    console.log(res);
+    return new _Promise(resolve => {
+      setTimeout(() => {
+        resolve(2);
+      }, 500);
+    });
+  })
+  .then(console.log);
+```
